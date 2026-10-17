@@ -1,15 +1,23 @@
-name: First GitHub Actions Workflow
+
+name: Workflow Triggers Demo
 
 on:
   push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  hello:
+  trigger-demo:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Display a greeting
-        run: echo "Hello! This is Muhammad Waqas from SE 7-2. My first GitHub Actions workflow is working."
-
-      - name: Display repository information
-        run: echo "This workflow runs automatically after a push."
+      - name: Show trigger information
+        run: |
+          echo "Workflow triggered successfully!"
+          echo "Event: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "User: ${{ github.actor }}"
