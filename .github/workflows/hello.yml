@@ -1,0 +1,15 @@
+name: First GitHub Actions Workflow
+
+on:
+  push:
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Display a greeting
+        run: echo "Hello! This is Muhammad Waqas from SE 7-2. My first GitHub Actions workflow is working."
+
+      - name: Display repository information
+        run: echo "This workflow runs automatically after a push."
