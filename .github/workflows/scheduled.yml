@@ -1,0 +1,16 @@
+name: Scheduled Workflow Demo
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  scheduled-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show schedule info
+        run: |
+          echo "Scheduled workflow triggered!"
+          echo "Event: ${{ github.event_name }}"
+          echo "Time: $(date -u)"
