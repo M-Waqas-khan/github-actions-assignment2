@@ -1,0 +1,66 @@
+name: Module 6 - Matrix Caching and Services
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # 1. Matrix Strategy (Run across 2 OS and 2 Node versions = 4 parallel jobs)
+  matrix-job:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [16, 18]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Print Node Version
+        run: node --version
+
+  # 2. Dependency Caching
+  caching-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm' # This automatically uses actions/cache under the hood!
+
+      - name: Install Dependencies (First run will be slow, second will be fast)
+        run: npm install
+
+  # 3. Service Containers (PostgreSQL Database)
+  service-container-job:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Test Database Connection
+        run: |
+          echo "Testing connection to PostgreSQL service container..."
+          PGPASSWORD=testpassword psql -h localhost -U testuser -d testdb -c "SELECT version();"
