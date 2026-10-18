@@ -1,0 +1,18 @@
+name: Repository Dispatch Demo
+
+on:
+  repository_dispatch:
+    types: [custom-webhook]
+
+jobs:
+  dispatch-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show dispatch payload
+        run: |
+          echo "Repository dispatch received!"
+          echo "Event: ${{ github.event_name }}"
+          echo "Action type: ${{ github.event.action }}"
+          echo "Payload: ${{ toJson(github.event.client_payload) }}"
+          echo "Actor: ${{ github.actor }}"
