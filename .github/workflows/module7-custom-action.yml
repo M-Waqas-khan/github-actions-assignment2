@@ -1,0 +1,19 @@
+name: Module 7 - Custom Action Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-custom-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        
+      - name: Call My Custom Action
+        uses: M-Waqas-khan/my-custom-action@v1.0.0
+        with:
+          who-to-greet: 'Muhammad Waqas'
