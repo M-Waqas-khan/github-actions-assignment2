@@ -1,0 +1,31 @@
+name: Module 5 - Multi-OS Runners
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-on-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ubuntu Version
+        run: uname -a
+
+  run-on-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Windows System Info
+        run: Get-ComputerInfo | Select-Object OsName, OsVersion
+      - name: Test PowerShell
+        shell: pwsh
+        run: Write-Host "Hello from Windows PowerShell!"
+
+  run-on-macos:
+    runs-on: macos-latest
+    steps:
+      - name: macOS Version
+        run: sw_vers
+      - name: Test Swift
+        run: swift --version
