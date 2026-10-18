@@ -1,0 +1,47 @@
+name: Module 3 - Contexts and Conditionals
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Job 1: Demonstrating Context Objects
+  context-inspection:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log GitHub Context
+        run: |
+          echo "Actor: ${{ github.actor }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Ref (Branch): ${{ github.ref }}"
+          echo "Runner OS: ${{ runner.os }}"
+
+      - name: Demonstrate Default Success Conditional
+        if: success()
+        run: echo "This step runs because the previous steps succeeded!"
+
+  # Job 2: Demonstrating Conditionals (Success, Failure, Always)
+  conditional-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step 1 - Succeeds
+        run: echo "This step runs normally."
+
+      - name: Step 2 - Fails on purpose
+        run: |
+          echo "Failing this step intentionally to test conditionals."
+          exit 1
+
+      - name: Step 3 - Runs ONLY on success
+        if: success()
+        run: echo "You will NOT see this because Step 2 failed."
+
+      - name: Step 4 - Runs ONLY on failure
+        if: failure()
+        run: echo "This step runs because Step 2 failed!"
+
+      - name: Step 5 - Runs ALWAYS
+        if: always()
+        run: echo "This step runs no matter what (success or failure)."
