@@ -26,7 +26,7 @@ jobs:
       - name: Print Node Version
         run: node --version
 
-  # 2. Dependency Caching
+   # 2. Dependency Caching
   caching-job:
     runs-on: ubuntu-latest
     steps:
@@ -37,11 +37,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm' # This automatically uses actions/cache under the hood!
 
-      - name: Install Dependencies (First run will be slow, second will be fast)
+      # Explicitly using actions/cache
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
         run: npm install
-
   # 3. Service Containers (PostgreSQL Database)
   service-container-job:
     runs-on: ubuntu-latest
